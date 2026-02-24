@@ -1,0 +1,30 @@
+CREATE DATABASE IF NOT EXISTS utn_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE utn_tracker;
+
+CREATE TABLE IF NOT EXISTS materia (
+    id               INT PRIMARY KEY,
+    nombre           VARCHAR(100) NOT NULL,
+    anio             TINYINT     NOT NULL COMMENT '1 al 5',
+    cuatrimestre     TINYINT     NOT NULL COMMENT '0=Anual, 1=Primer, 2=Segundo',
+    es_libre         BOOLEAN     NOT NULL DEFAULT FALSE COMMENT 'Se puede rendir libre',
+    es_configurable  BOOLEAN     NOT NULL DEFAULT FALSE COMMENT 'El alumno elige en qué cuatrimestre la cursa'
+);
+
+CREATE TABLE IF NOT EXISTS correlatividad (
+    materia_id      INT NOT NULL,
+    correlativa_id  INT NOT NULL,
+    tipo            ENUM('CURSAR', 'APROBAR') NOT NULL,
+    PRIMARY KEY (materia_id, correlativa_id, tipo),
+    FOREIGN KEY (materia_id)     REFERENCES materia(id),
+    FOREIGN KEY (correlativa_id) REFERENCES materia(id)
+);
+
+CREATE TABLE IF NOT EXISTS materia_estado (
+    id                       BIGINT AUTO_INCREMENT PRIMARY KEY,
+    materia_id               INT          NOT NULL UNIQUE,
+    estado                   ENUM('PENDIENTE','CURSANDO','REGULAR','APROBADA') NOT NULL DEFAULT 'PENDIENTE',
+    nota                     DECIMAL(4,2) NULL,
+    anio_academico           YEAR         NULL,
+    cuatrimestre_cursado     TINYINT      NULL,
+    FOREIGN KEY (materia_id) REFERENCES materia(id)
+);
