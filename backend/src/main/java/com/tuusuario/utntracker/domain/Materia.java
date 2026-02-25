@@ -9,6 +9,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Where;
+
 @Entity
 @Table(name = "materia")
 @Getter @Setter @NoArgsConstructor
