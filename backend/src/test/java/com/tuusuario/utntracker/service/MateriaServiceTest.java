@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,8 +44,8 @@ class MateriaServiceTest {
         materia.setCuatrimestre(0);
         materia.setEsLibre(false);
         materia.setEsConfigurable(false);
-        materia.setCorrelativasCursar(List.of());
-        materia.setCorrelativasAprobar(List.of());
+        materia.setCorrelativasCursar(Set.of());
+        materia.setCorrelativasAprobar(Set.of());
 
         estadoEntity = new MateriaEstado();
         estadoEntity.setMateria(materia);

@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Where;
 
@@ -22,13 +24,13 @@ public class Materia {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT")
     private Integer anio;
 
     /**
      * 0 = Anual, 1 = Primer cuatrimestre, 2 = Segundo cuatrimestre
      */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT")
     private Integer cuatrimestre;
 
     @Column(name = "es_libre", nullable = false)
@@ -47,7 +49,7 @@ public class Materia {
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
     @Where(clause = "tipo = 'CURSAR'")   // filtra solo las de tipo CURSAR
-    private List<Materia> correlativasCursar = new ArrayList<>();
+    private Set<Materia> correlativasCursar = new HashSet<>();
 
     // ── Correlatividades para APROBAR ──────────────────────────────────────────
     @ManyToMany
@@ -59,7 +61,7 @@ public class Materia {
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
     @Where(clause = "tipo = 'APROBAR'")
-    private List<Materia> correlativasAprobar = new ArrayList<>();
+    private Set<Materia> correlativasAprobar = new HashSet<>();
 
     // ── Estado del alumno (relación inversa) ───────────────────────────────────
     @OneToOne(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

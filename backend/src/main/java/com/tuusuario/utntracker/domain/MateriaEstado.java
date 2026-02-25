@@ -31,9 +31,9 @@ public class MateriaEstado {
     @Column(precision = 4, scale = 2)
     private BigDecimal nota;
 
-    @Column(name = "anio_academico")
+    @Column(name = "anio_academico", columnDefinition = "YEAR")
     private Integer anioAcademico;
 
-    @Column(name = "cuatrimestre_cursado")
+    @Column(name = "cuatrimestre_cursado", columnDefinition = "TINYINT")
     private Integer cuatrimestreCursado;
 }
