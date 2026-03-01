@@ -1,3 +1,4 @@
+-- Active: 1772330341262@@127.0.0.1@3306@utn_tracker
 CREATE DATABASE IF NOT EXISTS utn_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE utn_tracker;
 

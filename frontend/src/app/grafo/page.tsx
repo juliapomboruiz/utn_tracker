@@ -20,7 +20,7 @@ export default function GrafoPage() {
       <StatsPanel materias={materias} />
       <NavTabs active="grafo" />
 
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 24px 48px' }}>
+      <div style={{ maxWidth: '100%', margin: '0 auto', padding: '0 24px 48px' }}>
         <GrafoCorrelativas
           materias={materias}
           getEstadoVisual={getEstadoVisual}

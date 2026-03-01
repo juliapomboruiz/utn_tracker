@@ -88,7 +88,7 @@ export default function GrafoCorrelativas({ materias, getEstadoVisual, onClickMa
     <div style={{ overflowX:'auto', overflowY:'auto', maxHeight:'72vh',
       background:'#060c16', borderRadius:12, border:'1px solid #0e1a28' }}>
       <div style={{ position:'relative', width:totalW, height:ch,
-        paddingLeft:LW, boxSizing:'border-box' }}>
+        paddingLeft:LW, boxSizing:'border-box',  margin:'0 auto' }}>
 
         {/* Fondo filas anuales */}
         {rows.map((row, ri) => row.c === 0 ? (
@@ -209,8 +209,8 @@ export default function GrafoCorrelativas({ materias, getEstadoVisual, onClickMa
         display:'flex', gap:20, alignItems:'center', background:'#060c16', flexWrap:'wrap' }}>
         <span style={{ fontSize:10, color:'#2d3f55', fontWeight:600 }}>Flechas:</span>
         {[
-          ['Para cursar',  '#1d4ed8'],
-          ['Para rendir',  '#b45309'],
+          ['Para cursar',  '#60a5fa'],
+          ['Para rendir',  '#fbbf24'],
         ].map(([lbl, col]) => (
           <span key={lbl} style={{ display:'flex', alignItems:'center', gap:5, fontSize:10, color:col }}>
             <span style={{ width:24, height:1.5, background:col, display:'inline-block', borderRadius:1 }} />
