@@ -15,6 +15,8 @@ export interface Materia {
   nota: number | null;
   anioAcademico: number | null;
   cuatrimestreCursado: number | null;
+  esElectiva: boolean;
+  creditos: number;
 }
 
 export interface Progreso {
@@ -24,6 +26,7 @@ export interface Progreso {
   pendientes: number;
   porcentaje: number;
   promedio: number | null;
+  creditosElectivas: number;
 }
 
 export interface UpdateEstadoPayload {

@@ -46,6 +46,12 @@ export default function MateriaCard({ materia: m, estadoVisual, onClick }: Props
               LIBRE
             </span>
           )}
+          {m.esElectiva && (
+              <span style={{ fontSize:7.5, fontWeight:700, color:'#fbbf24',
+                background:'#b4530920', borderRadius:3, padding:'1px 4px', letterSpacing:0.3 }}>
+                ★ {m.creditos} CRÉDITOS
+              </span>
+            )}
         </div>
       </div>
 

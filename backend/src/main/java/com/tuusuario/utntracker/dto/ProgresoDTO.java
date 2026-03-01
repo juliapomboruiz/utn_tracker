@@ -13,4 +13,5 @@ public class ProgresoDTO {
     private final int        pendientes;
     private final int        porcentaje;    // aprobadas / total * 100
     private final BigDecimal promedio;      // promedio de notas aprobadas
+    private final int creditosElectivas;
 }

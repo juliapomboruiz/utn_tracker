@@ -19,17 +19,33 @@ function Pill({ label, value, color }: { label: string; value: string; color: st
 
 export default function StatsPanel({ materias }: Props) {
   const stats = useMemo(() => {
-    const total     = materias.length;
-    const aprobadas = materias.filter(m => m.estado === 'APROBADA').length;
-    const enCurso   = materias.filter(m => ['CURSANDO','REGULAR'].includes(m.estado)).length;
+    // 1. Separamos las materias obligatorias
+    const obligatorias = materias.filter(m => !m.esElectiva);
+    
+    // 2. Estadísticas de la CARRERA (Solo obligatorias)
+    const total     = obligatorias.length; // 36
+    const aprobadas = obligatorias.filter(m => m.estado === 'APROBADA').length;
+    const pct       = total > 0 ? Math.round((aprobadas / total) * 100) : 0;
+
+    // 3. Situación ACTUAL (Acá sí contamos TODAS: obligatorias + electivas)
+    //    Porque te interesa saber tu carga total, sin importar el tipo de materia.
+    const enCurso   = materias.filter(m => m.estado === 'CURSANDO').length;
+    const regulares = materias.filter(m => m.estado === 'REGULAR').length;
+
+    // 4. Créditos (Solo electivas aprobadas)
+    const creditos = materias
+      .filter(m => m.esElectiva && m.estado === 'APROBADA')
+      .reduce((acc, m) => acc + m.creditos, 0);
+
+    // 5. Promedio (Todas las materias con nota)
     const notas     = materias
       .filter(m => m.estado === 'APROBADA' && m.nota !== null)
       .map(m => m.nota as number);
     const promedio  = notas.length
       ? (notas.reduce((a,b) => a+b, 0) / notas.length).toFixed(2)
       : '—';
-    const pct = total > 0 ? Math.round(aprobadas / total * 100) : 0;
-    return { total, aprobadas, enCurso, promedio, pct };
+
+    return { total, aprobadas, enCurso, regulares, pct, creditos, promedio };
   }, [materias]);
 
   return (
@@ -52,10 +68,12 @@ export default function StatsPanel({ materias }: Props) {
           </div>
 
           <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-            <Pill label="Avance"    value={`${stats.pct}%`}                     color="#818cf8" />
-            <Pill label="Aprobadas" value={`${stats.aprobadas}/${stats.total}`} color="#34d399" />
-            <Pill label="En curso"  value={String(stats.enCurso)}               color="#60a5fa" />
-            <Pill label="Promedio"  value={stats.promedio}                       color="#fbbf24" />
+            <Pill label="Avance"       value={`${stats.pct}%`}                     color="#818cf8" />
+            <Pill label="Obligatorias" value={`${stats.aprobadas}/${stats.total}`} color="#34d399" />
+            <Pill label="Créditos"     value={`${stats.creditos}/40`}              color="#f472b6" />
+            <Pill label="Cursando"     value={String(stats.enCurso)}               color="#60a5fa" />
+            <Pill label="Regulares"    value={String(stats.regulares)}             color="#fbbf24" />
+            <Pill label="Promedio"     value={stats.promedio}                      color="#eab308" />
           </div>
         </div>
 

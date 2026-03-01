@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import org.hibernate.annotations.SQLJoinTableRestriction;
 import org.hibernate.annotations.Where;
 
 @Entity
@@ -39,6 +39,12 @@ public class Materia {
     @Column(name = "es_configurable", nullable = false)
     private Boolean esConfigurable = false;
 
+    @Column(name = "es_electiva", nullable = false)
+    private Boolean esElectiva = false;
+
+    @Column(nullable = false)
+    private Integer creditos = 0;
+
     // ── Correlatividades para CURSAR ───────────────────────────────────────────
     @ManyToMany
     @JoinTable(
@@ -48,7 +54,7 @@ public class Materia {
         foreignKey = @ForeignKey(name = "fk_corr_materia"),
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
-    @Where(clause = "tipo = 'CURSAR'")   // filtra solo las de tipo CURSAR
+    @SQLJoinTableRestriction("tipo = 'CURSAR'") // filtra solo las de tipo CURSAR
     private Set<Materia> correlativasCursar = new HashSet<>();
 
     // ── Correlatividades para APROBAR ──────────────────────────────────────────
@@ -60,7 +66,7 @@ public class Materia {
         foreignKey = @ForeignKey(name = "fk_corr_materia"),
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
-    @Where(clause = "tipo = 'APROBAR'")
+    @SQLJoinTableRestriction("tipo = 'APROBAR'")
     private Set<Materia> correlativasAprobar = new HashSet<>();
 
     // ── Estado del alumno (relación inversa) ───────────────────────────────────

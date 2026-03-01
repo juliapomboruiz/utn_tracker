@@ -20,6 +20,8 @@ public class MateriaDTO {
     private final Integer cuatrimestre;     // 0=Anual, 1=1°C, 2=2°C
     private final Boolean esLibre;
     private final Boolean esConfigurable;
+    private final Boolean esElectiva;
+    private final Integer creditos;
 
     // IDs de correlativas (el frontend ya conoce los datos completos)
     private final List<Integer> correlativasCursar;
@@ -38,6 +40,8 @@ public class MateriaDTO {
         this.cuatrimestre    = m.getCuatrimestre();
         this.esLibre         = m.getEsLibre();
         this.esConfigurable  = m.getEsConfigurable();
+        this.esElectiva      = m.getEsElectiva();
+        this.creditos        = m.getCreditos();
 
         this.correlativasCursar  = m.getCorrelativasCursar().stream()
                                     .map(Materia::getId).toList();

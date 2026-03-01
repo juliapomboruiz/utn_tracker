@@ -42,6 +42,12 @@ public class ProgresoService {
                 2, RoundingMode.HALF_UP
             );
 
+        int creditosElectivas = estadoRepository.findByEstado(Estado.APROBADA)
+            .stream()
+            .filter(e -> e.getMateria().getEsElectiva())
+            .mapToInt(e -> e.getMateria().getCreditos())
+            .sum();
+
         return ProgresoDTO.builder()
             .totalMaterias(total)
             .aprobadas(aprobadas)
