@@ -1,0 +1,22 @@
+# ─── Backend ───────────────────────────────────────────────────────────────
+backend/target/
+backend/*.log
+# El .properties real con credenciales NUNCA se sube
+backend/src/main/resources/application.properties
+
+# ─── Frontend ──────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local        # credenciales locales, nunca al repo
+frontend/.env.*.local
+
+# ─── OS / IDE ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/settings.json
+*.class
+*.jar
+*.war

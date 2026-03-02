@@ -1,0 +1,19 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  background: #060c14;
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #060c14; }
+::-webkit-scrollbar-thumb { background: #1a2a3d; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #2d4060; }
+
+button { font-family: inherit; }
+input  { font-family: inherit; }
