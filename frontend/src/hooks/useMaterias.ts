@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Materia, Estado, EstadoVisual } from '@/types'; // Quitamos UpdateEstadoPayload si da error, o lo dejamos si existe
-import { fetchMaterias as apiFetchMaterias, updateEstadoMateria } from '@/lib/api'; // <--- CAMBIO IMPORTANTE
+import { Materia, Estado, EstadoVisual, UpdateEstadoPayload } from '@/types';
+import { fetchMaterias as apiFetchMaterias, updateEstadoMateria } from '@/lib/api';
 
 export function useMaterias() {
   const [materias, setMaterias] = useState<Materia[]>([]);
@@ -12,8 +12,7 @@ export function useMaterias() {
   const fetchMaterias = useCallback(async () => {
     try {
       setLoading(true);
-      // Usamos la función importada directamente
-      const data = await apiFetchMaterias(); 
+      const data = await apiFetchMaterias();
       setMaterias(data);
     } catch (e: any) {
       setError(e.message ?? 'Error al cargar materias');
@@ -29,13 +28,11 @@ export function useMaterias() {
   const getEstadoVisual = useCallback((m: Materia): EstadoVisual => {
     if (m.estado !== 'PENDIENTE') return m.estado;
 
-    // Mapa rápido de estados para chequear correlativas
     const estadoMap: Record<number, Estado> = {};
     materias.forEach(mat => { estadoMap[mat.id] = mat.estado; });
 
-    // Lógica de correlativas
     const cursarOk = m.correlativasCursar.every(id =>
-      ['CURSANDO','REGULAR','APROBADA'].includes(estadoMap[id] ?? 'PENDIENTE')
+      ['CURSANDO', 'REGULAR', 'APROBADA'].includes(estadoMap[id] ?? 'PENDIENTE')
     );
     const aprobarOk = m.correlativasAprobar.every(id =>
       estadoMap[id] === 'APROBADA'
@@ -44,31 +41,40 @@ export function useMaterias() {
     return (cursarOk && aprobarOk) ? 'DISPONIBLE' : 'PENDIENTE';
   }, [materias]);
 
+  /**
+   * FIX: La firma ahora acepta (id, payload) en lugar de (id, estado, nota, anio, cuatrimestre).
+   * Las páginas (grilla/page.tsx, grafo/page.tsx) llaman:
+   *   await updateEstado(selected.id, payload)
+   * donde payload = { estado, nota, anioAcademico, cuatrimestreCursado }
+   * Antes se pasaba payload como segundo argumento esperando un string → el JSON
+   * llegaba como { "estado": { "estado": "CURSANDO" } } y Jackson explotaba (403).
+   */
   const updateEstado = useCallback(async (
-    id: number, 
-    nuevoEstado: Estado, 
-    nota?: number | null, 
-    anio?: number | null, 
-    cuatrimestre?: number | null
+    id: number,
+    payload: UpdateEstadoPayload
   ) => {
     try {
-      // Usamos la función importada directamente
-      const updated = await updateEstadoMateria(id, nuevoEstado, nota, anio, cuatrimestre);
-      
+      const updated = await updateEstadoMateria(
+        id,
+        payload.estado,
+        payload.nota,
+        payload.anioAcademico,
+        payload.cuatrimestreCursado
+      );
       setMaterias(prev => prev.map(m => m.id === id ? updated : m));
       return updated;
     } catch (error) {
-      console.error("Error al actualizar estado:", error);
+      console.error('Error al actualizar estado:', error);
       throw error;
     }
   }, []);
 
-  return { 
-    materias, 
-    loading, 
-    error, 
-    getEstadoVisual, 
-    updateEstado, 
-    refetch: fetchMaterias 
+  return {
+    materias,
+    loading,
+    error,
+    getEstadoVisual,
+    updateEstado,
+    refetch: fetchMaterias,
   };
 }

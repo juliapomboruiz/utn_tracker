@@ -1,17 +1,13 @@
 package com.tuusuario.utntracker.domain;
 
-import com.tuusuario.utntracker.domain.enums.TipoCorrelatividad;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.hibernate.annotations.SQLJoinTableRestriction;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "materia")
@@ -27,9 +23,7 @@ public class Materia {
     @Column(nullable = false, columnDefinition = "TINYINT")
     private Integer anio;
 
-    /**
-     * 0 = Anual, 1 = Primer cuatrimestre, 2 = Segundo cuatrimestre
-     */
+    /** 0 = Anual, 1 = Primer cuatrimestre, 2 = Segundo cuatrimestre */
     @Column(nullable = false, columnDefinition = "TINYINT")
     private Integer cuatrimestre;
 
@@ -54,7 +48,7 @@ public class Materia {
         foreignKey = @ForeignKey(name = "fk_corr_materia"),
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
-    @SQLJoinTableRestriction("tipo = 'CURSAR'") // filtra solo las de tipo CURSAR
+    @SQLJoinTableRestriction("tipo = 'CURSAR'")
     private Set<Materia> correlativasCursar = new HashSet<>();
 
     // ── Correlatividades para APROBAR ──────────────────────────────────────────
@@ -69,7 +63,9 @@ public class Materia {
     @SQLJoinTableRestriction("tipo = 'APROBAR'")
     private Set<Materia> correlativasAprobar = new HashSet<>();
 
-    // ── Estado del alumno (relación inversa) ───────────────────────────────────
-    @OneToOne(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private MateriaEstado estado;
+    // ELIMINADO: @OneToOne(mappedBy = "materia", fetch = FetchType.EAGER)
+    // Ese campo causaba: "More than one row with the given identifier found"
+    // porque materia_estado tiene UNA FILA POR USUARIO por materia.
+    // El estado del usuario autenticado ahora se carga en MateriaService
+    // con estadoRepository.findByUsuario(usuario) y se inyecta en MateriaDTO.from(m, estado).
 }

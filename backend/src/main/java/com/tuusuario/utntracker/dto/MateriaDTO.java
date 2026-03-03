@@ -63,8 +63,6 @@ public class MateriaDTO {
         return new MateriaDTO(m, est);
     }
 
-    /** Fallback para compatibilidad (ej: tests que no necesitan multi-usuario). */
-    public static MateriaDTO from(Materia m) {
-        return new MateriaDTO(m, m.getEstado());
-    }
+    // ELIMINADO: from(Materia m) — llamaba m.getEstado() que ya no existe en la entidad.
+    // Usar siempre from(m, estadoMap.get(m.getId())).
 }

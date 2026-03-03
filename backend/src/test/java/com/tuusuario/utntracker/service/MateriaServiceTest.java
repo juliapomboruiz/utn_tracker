@@ -60,7 +60,7 @@ class MateriaServiceTest {
         estadoEntity.setMateria(materia);
         estadoEntity.setUsuario(usuario);
         estadoEntity.setEstado(Estado.PENDIENTE);
-        materia.setEstado(estadoEntity);
+        // materia.setEstado() eliminado: Materia ya no tiene ese campo
     }
 
     @Test
