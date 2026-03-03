@@ -15,14 +15,15 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
     List<Materia> findByAnioAndCuatrimestreOrderByIdAsc(Integer anio, Integer cuatrimestre);
 
     /**
-     * Trae todas las materias con sus correlativas y estado en un solo query
-     * para evitar el problema N+1.
+     * Trae todas las materias con sus correlativas en un solo query.
+     * FIX: Se eliminó LEFT JOIN FETCH m.estado porque Materia.estado es @OneToOne
+     * pero en BD hay múltiples registros por materia (uno por usuario).
+     * El estado del usuario se carga por separado en MateriaService.getAll().
      */
     @Query("""
         SELECT DISTINCT m FROM Materia m
         LEFT JOIN FETCH m.correlativasCursar
         LEFT JOIN FETCH m.correlativasAprobar
-        LEFT JOIN FETCH m.estado
         ORDER BY m.anio ASC, m.cuatrimestre ASC, m.id ASC
     """)
     List<Materia> findAllWithCorrelativas();

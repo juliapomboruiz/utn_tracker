@@ -12,11 +12,13 @@ import java.util.Optional;
 @Repository
 public interface MateriaEstadoRepository extends JpaRepository<MateriaEstado, Long> {
 
-    Optional<MateriaEstado> findByMateriaId(Integer materiaId);
+    // FIX: Integer es consistente con Materia.id (era Long antes → bug silencioso)
+    Optional<MateriaEstado> findByUsuarioAndMateriaId(Usuario usuario, Integer materiaId);
+
+    // FIX: agregado para cargar todos los estados de un usuario en getAll()
+    List<MateriaEstado> findByUsuario(Usuario usuario);
 
     List<MateriaEstado> findByEstado(Estado estado);
 
     long countByEstado(Estado estado);
-
-    Optional<MateriaEstado> findByUsuarioAndMateriaId(Usuario usuario, Long materiaId);
 }
