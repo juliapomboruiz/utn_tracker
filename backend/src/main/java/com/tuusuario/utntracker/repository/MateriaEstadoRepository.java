@@ -1,6 +1,7 @@
 package com.tuusuario.utntracker.repository;
 
 import com.tuusuario.utntracker.domain.MateriaEstado;
+import com.tuusuario.utntracker.domain.Usuario; // <--- FALTABA ESTE IMPORT
 import com.tuusuario.utntracker.domain.enums.Estado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,8 @@ public interface MateriaEstadoRepository extends JpaRepository<MateriaEstado, Lo
     List<MateriaEstado> findByEstado(Estado estado);
 
     long countByEstado(Estado estado);
+
+    // --- AGREGAR ESTA LÍNEA OBLIGATORIAMENTE ---
+    // Sin esto, el controlador falla y no se actualiza
+    Optional<MateriaEstado> findByUsuarioAndMateriaId(Usuario usuario, Long materiaId);
 }
