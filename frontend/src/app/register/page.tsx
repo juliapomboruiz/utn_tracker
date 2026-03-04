@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 export default function RegisterPage() {
   const { login } = useAuth();
   const [nombre, setNombre] = useState('');
@@ -14,7 +16,8 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {        method: 'POST',
+      const res = await fetch(`${API}/api/auth/register`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, email, password }),
       });
@@ -54,49 +57,30 @@ export default function RegisterPage() {
               {error}
             </div>
           )}
-
           <div>
             <label style={{ display: 'block', color: '#94a3b8', fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Nombre Completo
             </label>
-            <input 
-              type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required 
-              style={{
-                width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b',
-                color: '#fff', outline: 'none'
-              }}
-            />
+            <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} required
+              style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
           </div>
-
           <div>
             <label style={{ display: 'block', color: '#94a3b8', fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Email
             </label>
-            <input 
-              type="email" value={email} onChange={(e) => setEmail(e.target.value)} required 
-              style={{
-                width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b',
-                color: '#fff', outline: 'none'
-              }}
-            />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+              style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
           </div>
-
           <div>
             <label style={{ display: 'block', color: '#94a3b8', fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Contraseña
             </label>
-            <input 
-              type="password" value={password} onChange={(e) => setPassword(e.target.value)} required 
-              style={{
-                width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b',
-                color: '#fff', outline: 'none'
-              }}
-            />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
+              style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
           </div>
-
           <button type="submit" style={{
             marginTop: 10, padding: '14px', borderRadius: 8, border: 'none', color: '#fff', fontWeight: 700,
-            background: 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.3)'
+            background: 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)', cursor: 'pointer'
           }}>
             Empezar Ahora
           </button>
