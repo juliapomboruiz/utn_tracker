@@ -28,17 +28,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (newToken: string, newUser: string) => {
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('usuario', newUser);
-    document.cookie = `token=${newToken}; path=/; max-age=86400; SameSite=Lax`;
-    setToken(newToken);
-    setUser(newUser);
-    router.push('/grilla');
+  localStorage.setItem('token', newToken);
+  localStorage.setItem('usuario', newUser);
+  // Guardamos en cookie para que el middleware pueda leerlo
+  document.cookie = `token=${newToken}; path=/; max-age=86400; SameSite=Lax`;
+  setToken(newToken);
+  setUser(newUser);
+  router.push('/grilla');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    // Borramos la cookie
     document.cookie = 'token=; path=/; max-age=0';
     setToken(null);
     setUser(null);
