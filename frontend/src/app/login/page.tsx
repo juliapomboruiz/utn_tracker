@@ -22,7 +22,7 @@ export default function LoginPage() {
   const handleGoogleSync = async (googleEmail: string, googleName: string) => {
     try {
       // Llamamos a TU backend para obtener el token real de la app
-      const res = await fetch('http://localhost:8080/api/auth/social-login', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/social-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: googleEmail, nombre: googleName }),
@@ -43,7 +43,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch('http://localhost:8080/api/auth/login', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/social-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
