@@ -5,8 +5,8 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl;
 
-  const isPublic = pathname === '/login' || pathname === '/register';
   const isProtected = pathname.startsWith('/grilla') || pathname.startsWith('/grafo');
+  const isPublic = pathname === '/login' || pathname === '/register';
 
   if (isProtected && !token) {
     return NextResponse.redirect(new URL('/login', request.url));
