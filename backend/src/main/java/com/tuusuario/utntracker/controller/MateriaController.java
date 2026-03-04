@@ -22,7 +22,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/materias")
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class MateriaController {
 
