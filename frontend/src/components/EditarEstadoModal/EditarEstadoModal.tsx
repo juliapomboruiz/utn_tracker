@@ -12,16 +12,17 @@ interface Props {
 
 const OPTS: Estado[] = ['PENDIENTE', 'CURSANDO', 'REGULAR', 'APROBADA'];
 
-// Estados que cuentan como "tener regular" una correlativa
+// Estados que cuentan como tener "cursada" una correlativa
 const REGULARIZADA: Estado[] = ['CURSANDO', 'REGULAR', 'APROBADA'];
 
-interface Faltante { id: number; nombre: string; requiere: 'regular' | 'aprobada'; actual: Estado; }
+interface Faltante { id: number; nombre: string; requiere: 'cursada' | 'aprobada'; actual: Estado; }
 
 /**
  * Correlatividades que no se cumplen para pasar la materia al estado elegido.
- * - Cursando / Regular: las de "para cursar" regularizadas y las de "para rendir" aprobadas
- *   (la misma regla que usa la grilla para marcar una materia como Disponible).
- * - Aprobada: todas las correlativas aprobadas.
+ * En el Plan 2023 los requisitos son los mismos "para cursar y rendir":
+ * las correlativas de la columna CURSADA tienen que estar cursadas (regulares) y
+ * las de la columna APROBADA, aprobadas. Es la misma regla que usa la grilla
+ * para marcar una materia como Disponible.
  */
 function calcularFaltantes(m: Materia, estado: Estado, materias: Materia[]): Faltante[] {
   if (estado === 'PENDIENTE') return [];
@@ -32,10 +33,10 @@ function calcularFaltantes(m: Materia, estado: Estado, materias: Materia[]): Fal
     const ok = requiere === 'aprobada' ? actual === 'APROBADA' : REGULARIZADA.includes(actual);
     return ok ? null : { id, nombre: c?.nombre ?? `#${id}`, requiere, actual };
   };
-  const pedidos: [number, Faltante['requiere']][] = estado === 'APROBADA'
-    ? Array.from(new Set([...m.correlativasCursar, ...m.correlativasAprobar])).map(id => [id, 'aprobada'])
-    : [...m.correlativasCursar.map(id => [id, 'regular'] as [number, Faltante['requiere']]),
-       ...m.correlativasAprobar.map(id => [id, 'aprobada'] as [number, Faltante['requiere']])];
+  const pedidos: [number, Faltante['requiere']][] = [
+    ...m.correlativasCursar.map(id => [id, 'cursada'] as [number, Faltante['requiere']]),
+    ...m.correlativasAprobar.map(id => [id, 'aprobada'] as [number, Faltante['requiere']]),
+  ];
   return pedidos.map(([id, r]) => ver(id, r)).filter((f): f is Faltante => f !== null);
 }
 
@@ -178,17 +179,17 @@ export default function EditarEstadoModal({ materia: m, materias, onSave, onClos
         {(m.correlativasCursar.length > 0 || m.correlativasAprobar.length > 0) && (
           <div style={{ background:'#060c16', borderRadius:9, padding:'10px 14px', marginBottom:18 }}>
             <p style={{ fontSize:10, color:'#2d3f55', margin:'0 0 6px', fontWeight:700, letterSpacing:0.5 }}>
-              CORRELATIVIDADES
+              CORRELATIVIDADES · PARA CURSAR Y RENDIR
             </p>
             {m.correlativasCursar.length > 0 && (
               <p style={{ margin:'0 0 5px', fontSize:11, lineHeight:1.65 }}>
-                <span style={{ color:'#60a5fa', fontWeight:600 }}>Para cursar: </span>
+                <span style={{ color:'#60a5fa', fontWeight:600 }}>Cursada: </span>
                 <span style={{ color:'#3b5aad' }}>{m.correlativasCursar.map(nombre).join(', ')}</span>
               </p>
             )}
             {m.correlativasAprobar.length > 0 && (
               <p style={{ margin:0, fontSize:11, lineHeight:1.65 }}>
-                <span style={{ color:'#fbbf24', fontWeight:600 }}>Para rendir: </span>
+                <span style={{ color:'#fbbf24', fontWeight:600 }}>Aprobada: </span>
                 <span style={{ color:'#7a4800' }}>{m.correlativasAprobar.map(nombre).join(', ')}</span>
               </p>
             )}

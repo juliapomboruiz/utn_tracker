@@ -210,8 +210,8 @@ export default function GrafoCorrelativas({ materias, getEstadoVisual, onClickMa
         display:'flex', gap:20, alignItems:'center', background:'#060c16', flexWrap:'wrap' }}>
         <span style={{ fontSize:10, color:'#2d3f55', fontWeight:600 }}>Flechas:</span>
         {[
-          ['Para cursar',  '#60a5fa'],
-          ['Para rendir',  '#fbbf24'],
+          ['Necesita cursada',  '#60a5fa'],
+          ['Necesita aprobada', '#fbbf24'],
         ].map(([lbl, col]) => (
           <span key={lbl} style={{ display:'flex', alignItems:'center', gap:5, fontSize:10, color:col }}>
             <span style={{ width:24, height:1.5, background:col, display:'inline-block', borderRadius:1 }} />
