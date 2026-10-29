@@ -1,4 +1,4 @@
-USE utn_tracker;
+-- Script para PostgreSQL. Ejecutar conectado a la base de la app.
 
 -- 1. LIMPIEZA DE TABLAS (En orden correcto por las claves foráneas)
 DELETE FROM materia_estado;
@@ -6,8 +6,8 @@ DELETE FROM correlatividad;
 DELETE FROM materia;
 DELETE FROM usuario;
 
--- Reseteamos los contadores de ID para que el usuario siempre sea el ID 1
-ALTER TABLE usuario AUTO_INCREMENT = 1;
+-- Reseteamos el contador de ID para que el usuario siempre sea el ID 1
+ALTER SEQUENCE IF EXISTS usuario_id_seq RESTART WITH 1;
 
 -- 2. CREACIÓN DEL USUARIO
 -- Email: admin@admin.com
@@ -19,6 +19,7 @@ VALUES ('admin@admin.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOcd7
 -- AÑO 1
 INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, es_electiva, creditos) VALUES
 (1, 'Análisis Matemático I', 1, 0, FALSE, FALSE, FALSE, 0),
+(4, 'Inglés I', 1, 0, TRUE, FALSE, FALSE, 0),
 (2, 'Álgebra y Geometría Analítica', 1, 0, FALSE, FALSE, FALSE, 0),
 (3, 'Física I', 1, 0, FALSE, FALSE, FALSE, 0),
 (6, 'Algoritmos y Estr. de Datos', 1, 0, FALSE, FALSE, FALSE, 0),
@@ -28,8 +29,8 @@ INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, 
 
 -- AÑO 2
 INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, es_electiva, creditos) VALUES
-(4, 'Inglés I', 2, 0, TRUE, FALSE, FALSE, 0),
 (9, 'Análisis Matemático II', 2, 0, FALSE, FALSE, FALSE, 0),
+(12, 'Inglés II', 2, 0, TRUE, FALSE, FALSE, 0),
 (10, 'Física II', 2, 0, FALSE, FALSE, FALSE, 0),
 (16, 'Análisis de Sistemas de Inf.', 2, 0, FALSE, FALSE, FALSE, 0),
 (13, 'Sintaxis y Semántica', 2, 1, FALSE, FALSE, FALSE, 0),
@@ -39,7 +40,6 @@ INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, 
 
 -- AÑO 3
 INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, es_electiva, creditos) VALUES
-(12, 'Inglés II', 3, 0, TRUE, FALSE, FALSE, 0),
 (22, 'Análisis Numérico', 3, 0, FALSE, FALSE, FALSE, 0),
 (23, 'Diseño de Sistemas de Inf.', 3, 0, FALSE, FALSE, FALSE, 0),
 (18, 'Economía', 3, 1, FALSE, FALSE, FALSE, 0),
@@ -98,6 +98,7 @@ INSERT INTO materia (id, nombre, anio, cuatrimestre, es_libre, es_configurable, 
 INSERT INTO correlatividad (materia_id, correlativa_id, tipo) VALUES
 (9, 1, 'CURSAR'), (9, 2, 'CURSAR'),
 (10, 1, 'CURSAR'), (10, 3, 'CURSAR'),
+(12, 4, 'CURSAR'),
 (16, 6, 'CURSAR'), (16, 8, 'CURSAR'),
 (13, 5, 'CURSAR'), (13, 6, 'CURSAR'),
 (14, 5, 'CURSAR'), (14, 6, 'CURSAR'),
@@ -145,6 +146,7 @@ INSERT INTO correlatividad (materia_id, correlativa_id, tipo) VALUES
 INSERT INTO correlatividad (materia_id, correlativa_id, tipo) VALUES
 (18, 1, 'APROBAR'), (18, 2, 'APROBAR'),
 (19, 5, 'APROBAR'), (19, 6, 'APROBAR'),
+(20, 5, 'APROBAR'), (20, 6, 'APROBAR'),
 (21, 3, 'APROBAR'), (21, 7, 'APROBAR'),
 (22, 1, 'APROBAR'), (22, 2, 'APROBAR'),
 (23, 4, 'APROBAR'), (23, 6, 'APROBAR'), (23, 8, 'APROBAR'),

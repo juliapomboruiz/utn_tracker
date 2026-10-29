@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.SQLJoinTableRestriction;
 
 @Entity
@@ -48,6 +49,7 @@ public class Materia {
         foreignKey = @ForeignKey(name = "fk_corr_materia"),
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
+    @Immutable // solo lectura: las correlatividades se cargan por SQL, Hibernate nunca debe reescribirlas
     @SQLJoinTableRestriction("tipo = 'CURSAR'")
     private Set<Materia> correlativasCursar = new HashSet<>();
 
@@ -60,6 +62,7 @@ public class Materia {
         foreignKey = @ForeignKey(name = "fk_corr_materia"),
         inverseForeignKey = @ForeignKey(name = "fk_corr_correlativa")
     )
+    @Immutable // solo lectura: las correlatividades se cargan por SQL, Hibernate nunca debe reescribirlas
     @SQLJoinTableRestriction("tipo = 'APROBAR'")
     private Set<Materia> correlativasAprobar = new HashSet<>();
 
