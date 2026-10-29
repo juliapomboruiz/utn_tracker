@@ -9,10 +9,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setError('');
+    setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
@@ -24,6 +27,7 @@ export default function LoginPage() {
       login(data.token, data.nombre);
     } catch (err) {
       setError('Email o contraseña incorrectos');
+      setLoading(false);
     }
   };
 
@@ -56,12 +60,18 @@ export default function LoginPage() {
             style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
           <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required
             style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
-          <button type="submit" style={{
+          <button type="submit" disabled={loading} style={{
             marginTop: 10, padding: '14px', borderRadius: 8, border: 'none', color: '#fff', fontWeight: 700,
-            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', cursor: 'pointer'
+            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            cursor: loading ? 'wait' : 'pointer', opacity: loading ? 0.7 : 1
           }}>
-            Ingresar
+            {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
+          {loading && (
+            <p style={{ color: '#64748b', fontSize: 12, textAlign: 'center', margin: 0 }}>
+              Si el servidor estaba inactivo, la primera vez puede tardar hasta un minuto.
+            </p>
+          )}
         </form>
 
         <p style={{ marginTop: 20, textAlign: 'center' }}>
