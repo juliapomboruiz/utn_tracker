@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { API_BASE } from '@/lib/api';
 
-const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function RegisterPage() {
   const { login } = useAuth();
@@ -16,7 +16,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch(`${API}/api/auth/register`, {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, email, password }),

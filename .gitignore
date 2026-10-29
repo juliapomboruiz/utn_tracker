@@ -6,7 +6,8 @@ backend/*.log
 frontend/node_modules/
 frontend/.next/
 frontend/out/
-frontend/.env.local        # credenciales locales, nunca al repo
+# credenciales locales, nunca al repo
+frontend/.env.local
 frontend/.env.*.local
 
 # ─── OS / IDE ──────────────────────────────────────────────────────────────

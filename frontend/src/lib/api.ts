@@ -1,7 +1,12 @@
 import { Materia, Estado } from '@/types';
 
-// En local usa localhost. En producción (Vercel) usa la URL de Koyeb.
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080') + '/api';
+// URL base del backend, sin "/api" al final. En local usa localhost; en producción, la variable de Vercel.
+// Si la variable viene con "/api" al final, se lo quitamos para no duplicarlo.
+export const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080')
+  .replace(/\/+$/, '')
+  .replace(/\/api$/, '');
+
+const API_URL = `${API_BASE}/api`;
 
 function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem('token');

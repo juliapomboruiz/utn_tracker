@@ -33,13 +33,7 @@ export default function GrafoPage() {
           materia={selected}
           materias={materias}
           onSave={async (payload) => {
-            await updateEstado(
-              selected.id,
-              payload.estado,
-              payload.nota,
-              payload.anioAcademico,
-              payload.cuatrimestreCursado
-            );
+            await updateEstado(selected.id, payload);
             setSelected(null);
           }}
           onClose={() => setSelected(null)}

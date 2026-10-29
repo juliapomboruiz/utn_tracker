@@ -1,47 +1,20 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_BASE } from '@/lib/api';
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (session?.user?.email) {
-      handleGoogleSync(session.user.email, session.user.name || 'Usuario Google');
-    }
-  }, [session]);
-
-  const handleGoogleSync = async (googleEmail: string, googleName: string) => {
-    try {
-      const res = await fetch(`${API}/api/auth/social-login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: googleEmail, nombre: googleName }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        login(data.token, data.nombre);
-      } else {
-        setError('Error al sincronizar con Google');
-      }
-    } catch (err) {
-      setError('Error de conexión con el servidor');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch(`${API}/api/auth/login`, {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -71,25 +44,6 @@ export default function LoginPage() {
             Bienvenido
           </h1>
           <p style={{ color: '#64748b', fontSize: 14 }}>Ingresa tus credenciales</p>
-        </div>
-
-        <button 
-          type="button"
-          onClick={() => signIn('google')}
-          style={{
-            width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #334155',
-            background: '#1e293b', color: '#fff', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', gap: 10, cursor: 'pointer', fontWeight: 600, marginBottom: 20,
-          }}
-        >
-          <img src="https://authjs.dev/img/providers/google.svg" width="20" height="20" alt="G" />
-          Continuar con Google
-        </button>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-          <div style={{ flex: 1, height: 1, background: '#1e293b' }} />
-          <span style={{ color: '#475569', fontSize: 12 }}>O CON EMAIL</span>
-          <div style={{ flex: 1, height: 1, background: '#1e293b' }} />
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>

@@ -75,41 +75,4 @@ public class AuthController {
         
         return ResponseEntity.ok(Map.of("token", token, "nombre", user.getNombre()));
     }
-
-    // Endpoint para Login Social (Google)
-    @PostMapping("/social-login")
-    public ResponseEntity<?> socialLogin(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String nombre = request.get("nombre");
-
-        // 1. Buscamos si ya existe el usuario
-        Usuario user = usuarioRepository.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            // 2. Si NO existe, lo creamos automáticamente (sin contraseña)
-            user = new Usuario();
-            user.setEmail(email);
-            user.setNombre(nombre);
-            user.setRol("USER");
-            user.setPassword(passwordEncoder.encode("SOCIAL_LOGIN_" + Math.random())); // Clave aleatoria inaccesible
-            
-            Usuario guardado = usuarioRepository.save(user);
-
-            // 3. Le creamos las materias iniciales
-            List<Materia> todasLasMaterias = materiaRepository.findAll();
-            Usuario finalUser = guardado; // variable final para el stream
-            List<MateriaEstado> estadosIniciales = todasLasMaterias.stream().map(materia -> {
-                MateriaEstado estado = new MateriaEstado();
-                estado.setUsuario(finalUser);
-                estado.setMateria(materia);
-                estado.setEstado(Estado.PENDIENTE);
-                return estado;
-            }).toList();
-            materiaEstadoRepository.saveAll(estadosIniciales);
-        }
-
-        // 4. Generamos el Token JWT de nuestra app
-        String token = jwtService.generateToken(new UserDetailsImpl(user));
-        return ResponseEntity.ok(Map.of("token", token, "nombre", user.getNombre()));
-    }
 }
