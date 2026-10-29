@@ -38,7 +38,8 @@ export async function updateEstadoMateria(
   nuevoEstado: Estado,
   nota?: number | null,
   anio?: number | null,
-  cuatrimestre?: number | null
+  cuatrimestre?: number | null,
+  excepcion?: boolean
 ): Promise<Materia> {
   const res = await fetch(`${API_URL}/materias/${materiaId}/estado`, {
     method: 'PUT',
@@ -48,6 +49,7 @@ export async function updateEstadoMateria(
       nota: nota,
       anioAcademico: anio,
       cuatrimestreCursado: cuatrimestre,
+      excepcion: excepcion ?? false,
     }),
   });
 

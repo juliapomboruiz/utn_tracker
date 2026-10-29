@@ -17,6 +17,7 @@ export interface Materia {
   cuatrimestreCursado: number | null;
   esElectiva: boolean;
   creditos: number;
+  excepcion: boolean;         // se registró sin cumplir correlatividades
 }
 
 export interface Progreso {
@@ -34,7 +35,11 @@ export interface UpdateEstadoPayload {
   nota?: number | null;
   anioAcademico?: number | null;
   cuatrimestreCursado?: number | null;
+  excepcion?: boolean;
 }
+
+/** Color de la etiqueta "Excepción" (materia cursada/aprobada sin cumplir correlatividades). */
+export const EXCEPCION_COLOR = '#f472b6';
 
 export const ESTADO_STYLES: Record<EstadoVisual, {
   label: string;

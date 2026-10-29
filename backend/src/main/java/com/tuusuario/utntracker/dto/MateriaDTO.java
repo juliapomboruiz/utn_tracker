@@ -35,6 +35,7 @@ public class MateriaDTO {
     private final BigDecimal nota;
     private final Integer    anioAcademico;
     private final Integer    cuatrimestreCursado;
+    private final Boolean    excepcion;
 
     private MateriaDTO(Materia m, MateriaEstado est) {
         this.id             = m.getId();
@@ -56,6 +57,7 @@ public class MateriaDTO {
         this.nota                = est != null ? est.getNota()                : null;
         this.anioAcademico       = est != null ? est.getAnioAcademico()       : null;
         this.cuatrimestreCursado = est != null ? est.getCuatrimestreCursado() : null;
+        this.excepcion           = est != null && Boolean.TRUE.equals(est.getExcepcion());
     }
 
     /** Usa el MateriaEstado ya resuelto para el usuario correcto. */

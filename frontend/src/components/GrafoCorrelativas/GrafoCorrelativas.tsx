@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Materia, EstadoVisual, ESTADO_STYLES } from '@/types';
+import { Materia, EstadoVisual, ESTADO_STYLES, EXCEPCION_COLOR } from '@/types';
 
 interface Props {
   materias: Materia[];
@@ -193,6 +193,7 @@ export default function GrafoCorrelativas({ materias, getEstadoVisual, onClickMa
                   {s.label.toUpperCase()}
                 </span>
                 <div style={{ display:'flex', gap:4, alignItems:'center' }}>
+                  {m.excepcion && <span title="Excepción a las correlatividades" style={{ fontSize:7.5, color:EXCEPCION_COLOR, fontWeight:700 }}>EXC.</span>}
                   {m.esLibre && <span style={{ fontSize:7.5, color:'#a78bfa', fontWeight:700 }}>LIBRE</span>}
                   {m.nota !== null && (
                     <span style={{ fontSize:10, fontWeight:800, color:s.text }}>{m.nota}</span>

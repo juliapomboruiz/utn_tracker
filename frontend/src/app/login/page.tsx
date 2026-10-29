@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { API_BASE } from '@/lib/api';
+import AuthBrand from '@/components/AuthBrand/AuthBrand';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -40,15 +41,11 @@ export default function LoginPage() {
         width: '100%', maxWidth: 400, padding: 40, background: '#0a1120',
         borderRadius: 16, border: '1px solid #1e293b', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <h1 style={{ 
-            fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: -0.5, marginBottom: 8,
-            background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>
-            Bienvenido
-          </h1>
-          <p style={{ color: '#64748b', fontSize: 14 }}>Ingresa tus credenciales</p>
-        </div>
+        <AuthBrand subtitle="Tu plan de estudios en un solo lugar: seguí tu avance en la carrera, materia por materia." showFeatures />
+
+        <p style={{ margin: '0 0 14px', fontSize: 12, fontWeight: 700, letterSpacing: 0.6, color: '#64748b', textTransform: 'uppercase' }}>
+          Iniciá sesión
+        </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {error && (
@@ -56,9 +53,9 @@ export default function LoginPage() {
               {error}
             </div>
           )}
-          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required
+          <input type="email" placeholder="Tu email" value={email} onChange={e => setEmail(e.target.value)} required
             style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
-          <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required
+          <input type="password" placeholder="Tu contraseña" value={password} onChange={e => setPassword(e.target.value)} required
             style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
           <button type="submit" disabled={loading} style={{
             marginTop: 10, padding: '14px', borderRadius: 8, border: 'none', color: '#fff', fontWeight: 700,
@@ -74,8 +71,8 @@ export default function LoginPage() {
           )}
         </form>
 
-        <p style={{ marginTop: 20, textAlign: 'center' }}>
-          <Link href="/register" style={{ color: '#818cf8', fontSize: 14, textDecoration: 'none' }}>Crear cuenta con Email</Link>
+        <p style={{ marginTop: 24, textAlign: 'center', color: '#64748b', fontSize: 14 }}>
+          ¿Todavía no tenés cuenta? <Link href="/register" style={{ color: '#818cf8', textDecoration: 'none', fontWeight: 600 }}>Creá una gratis</Link>
         </p>
       </div>
     </div>

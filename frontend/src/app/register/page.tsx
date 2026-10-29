@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { API_BASE } from '@/lib/api';
+import AuthBrand from '@/components/AuthBrand/AuthBrand';
 
 
 export default function RegisterPage() {
@@ -26,12 +27,12 @@ export default function RegisterPage() {
       });
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || 'Error al registrarse');
+        throw new Error(text || 'No se pudo crear la cuenta. Probá de nuevo.');
       }
       const data = await res.json();
       login(data.token, data.nombre);
     } catch (err: any) {
-      setError(err.message || 'Error al registrarse');
+      setError(err.message || 'No se pudo crear la cuenta. Probá de nuevo.');
       setLoading(false);
     }
   };
@@ -45,15 +46,7 @@ export default function RegisterPage() {
         width: '100%', maxWidth: 400, padding: 40, background: '#0a1120',
         borderRadius: 16, border: '1px solid #1e293b', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <h1 style={{ 
-            fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: -0.5, marginBottom: 8,
-            background: 'linear-gradient(135deg, #fff 0%, #4ade80 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>
-            Crear Cuenta
-          </h1>
-          <p style={{ color: '#64748b', fontSize: 14 }}>Únete al Tracker de Ingeniería</p>
-        </div>
+        <AuthBrand subtitle="Creá tu cuenta y empezá a registrar tu avance. Las materias del Plan 2023 ya vienen cargadas." />
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {error && (
@@ -63,7 +56,7 @@ export default function RegisterPage() {
           )}
           <div>
             <label style={{ display: 'block', color: '#94a3b8', fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-              Nombre Completo
+              Nombre
             </label>
             <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} required
               style={{ width: '100%', padding: '12px 16px', borderRadius: 8, background: '#030712', border: '1px solid #1e293b', color: '#fff', outline: 'none' }} />
@@ -87,7 +80,7 @@ export default function RegisterPage() {
             background: 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
             cursor: loading ? 'wait' : 'pointer', opacity: loading ? 0.7 : 1
           }}>
-            {loading ? 'Creando cuenta...' : 'Empezar Ahora'}
+            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
           {loading && (
             <p style={{ color: '#64748b', fontSize: 12, textAlign: 'center', margin: 0 }}>
@@ -97,7 +90,7 @@ export default function RegisterPage() {
         </form>
 
         <p style={{ marginTop: 32, textAlign: 'center', color: '#64748b', fontSize: 14 }}>
-          ¿Ya tienes cuenta? <Link href="/login" style={{ color: '#4ade80', textDecoration: 'none', fontWeight: 600 }}>Inicia Sesión</Link>
+          ¿Ya tenés cuenta? <Link href="/login" style={{ color: '#4ade80', textDecoration: 'none', fontWeight: 600 }}>Iniciá sesión</Link>
         </p>
       </div>
     </div>

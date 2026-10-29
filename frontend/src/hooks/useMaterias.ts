@@ -59,7 +59,8 @@ export function useMaterias() {
         payload.estado,
         payload.nota,
         payload.anioAcademico,
-        payload.cuatrimestreCursado
+        payload.cuatrimestreCursado,
+        payload.excepcion
       );
       setMaterias(prev => prev.map(m => m.id === id ? updated : m));
       return updated;

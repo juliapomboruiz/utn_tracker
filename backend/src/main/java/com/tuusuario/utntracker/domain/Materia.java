@@ -20,11 +20,11 @@ public class Materia {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, columnDefinition = "TINYINT")
+    @Column(nullable = false)
     private Integer anio;
 
     /** 0 = Anual, 1 = Primer cuatrimestre, 2 = Segundo cuatrimestre */
-    @Column(nullable = false, columnDefinition = "TINYINT")
+    @Column(nullable = false)
     private Integer cuatrimestre;
 
     @Column(name = "es_libre", nullable = false)

@@ -34,9 +34,16 @@ public class MateriaEstado {
     @Column(precision = 4, scale = 2)
     private BigDecimal nota;
 
-    @Column(name = "anio_academico", columnDefinition = "YEAR")
+    @Column(name = "anio_academico")
     private Integer anioAcademico;
 
-    @Column(name = "cuatrimestre_cursado", columnDefinition = "TINYINT")
+    @Column(name = "cuatrimestre_cursado")
     private Integer cuatrimestreCursado;
+
+    /**
+     * true cuando el alumno registró este estado sin cumplir las correlatividades
+     * (la facultad le otorgó una excepción). Nullable para filas creadas antes del campo.
+     */
+    @Column(name = "excepcion")
+    private Boolean excepcion = false;
 }

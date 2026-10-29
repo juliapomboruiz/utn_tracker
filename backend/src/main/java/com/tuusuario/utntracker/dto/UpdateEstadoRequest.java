@@ -21,4 +21,7 @@ public class UpdateEstadoRequest {
 
     private Integer anioAcademico;
     private Integer cuatrimestreCursado;
+
+    /** El alumno confirma que cursa/aprobó la materia por excepción a las correlatividades. */
+    private Boolean excepcion;
 }

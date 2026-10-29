@@ -2,6 +2,7 @@ package com.tuusuario.utntracker.service;
 
 import com.tuusuario.utntracker.domain.Materia;
 import com.tuusuario.utntracker.domain.MateriaEstado;
+import com.tuusuario.utntracker.domain.enums.Estado;
 import com.tuusuario.utntracker.domain.Usuario;
 import com.tuusuario.utntracker.dto.MateriaDTO;
 import com.tuusuario.utntracker.dto.UpdateEstadoRequest;
@@ -88,6 +89,10 @@ public class MateriaService {
 
         estado.setAnioAcademico(request.getAnioAcademico());
         estado.setCuatrimestreCursado(request.getCuatrimestreCursado());
+
+        // Una materia PENDIENTE nunca es excepción; en el resto respetamos lo que confirmó el alumno
+        estado.setExcepcion(request.getEstado() != Estado.PENDIENTE
+                && Boolean.TRUE.equals(request.getExcepcion()));
 
         estadoRepository.save(estado);
 

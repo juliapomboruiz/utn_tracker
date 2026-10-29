@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Materia, Estado, UpdateEstadoPayload, ESTADO_STYLES } from '@/types';
+import { useMemo, useState } from 'react';
+import { Materia, Estado, UpdateEstadoPayload, ESTADO_STYLES, EXCEPCION_COLOR } from '@/types';
 
 interface Props {
   materia: Materia;
@@ -12,6 +12,33 @@ interface Props {
 
 const OPTS: Estado[] = ['PENDIENTE', 'CURSANDO', 'REGULAR', 'APROBADA'];
 
+// Estados que cuentan como "tener regular" una correlativa
+const REGULARIZADA: Estado[] = ['CURSANDO', 'REGULAR', 'APROBADA'];
+
+interface Faltante { id: number; nombre: string; requiere: 'regular' | 'aprobada'; actual: Estado; }
+
+/**
+ * Correlatividades que no se cumplen para pasar la materia al estado elegido.
+ * - Cursando / Regular: las de "para cursar" regularizadas y las de "para rendir" aprobadas
+ *   (la misma regla que usa la grilla para marcar una materia como Disponible).
+ * - Aprobada: todas las correlativas aprobadas.
+ */
+function calcularFaltantes(m: Materia, estado: Estado, materias: Materia[]): Faltante[] {
+  if (estado === 'PENDIENTE') return [];
+  const porId = new Map(materias.map(x => [x.id, x]));
+  const ver = (id: number, requiere: Faltante['requiere']): Faltante | null => {
+    const c = porId.get(id);
+    const actual = c?.estado ?? 'PENDIENTE';
+    const ok = requiere === 'aprobada' ? actual === 'APROBADA' : REGULARIZADA.includes(actual);
+    return ok ? null : { id, nombre: c?.nombre ?? `#${id}`, requiere, actual };
+  };
+  const pedidos: [number, Faltante['requiere']][] = estado === 'APROBADA'
+    ? Array.from(new Set([...m.correlativasCursar, ...m.correlativasAprobar])).map(id => [id, 'aprobada'])
+    : [...m.correlativasCursar.map(id => [id, 'regular'] as [number, Faltante['requiere']]),
+       ...m.correlativasAprobar.map(id => [id, 'aprobada'] as [number, Faltante['requiere']])];
+  return pedidos.map(([id, r]) => ver(id, r)).filter((f): f is Faltante => f !== null);
+}
+
 function cLabel(c: number) {
   return c === 0 ? 'Anual' : c === 1 ? '1° Cuatrimestre' : '2° Cuatrimestre';
 }
@@ -20,16 +47,23 @@ export default function EditarEstadoModal({ materia: m, materias, onSave, onClos
   const [estado,   setEstado]   = useState<Estado>(m.estado);
   const [nota,     setNota]     = useState(m.nota !== null ? String(m.nota) : '');
   const [saving,   setSaving]   = useState(false);
+  const [excepcion, setExcepcion] = useState<boolean>(m.excepcion);
+
+  const faltantes = useMemo(() => calcularFaltantes(m, estado, materias), [m, estado, materias]);
+  const requiereExcepcion = faltantes.length > 0;
+  const puedeGuardar = !saving && (!requiereExcepcion || excepcion);
 
   const hasNota = estado === 'REGULAR' || estado === 'APROBADA';
   const nombre  = (id: number) => materias.find(x => x.id === id)?.nombre ?? `#${id}`;
 
   async function handleSave() {
+    if (!puedeGuardar) return;
     setSaving(true);
     try {
       await onSave({
         estado,
         nota: hasNota && nota !== '' ? parseFloat(nota) : null,
+        excepcion: requiereExcepcion && excepcion,
       });
     } finally {
       setSaving(false);
@@ -97,6 +131,32 @@ export default function EditarEstadoModal({ materia: m, materias, onSave, onClos
           })}
         </div>
 
+        {/* Excepción a las correlatividades */}
+        {requiereExcepcion && (
+          <div style={{ background:`${EXCEPCION_COLOR}10`, border:`1px solid ${EXCEPCION_COLOR}55`,
+            borderRadius:9, padding:'12px 14px', marginBottom:18 }}>
+            <p style={{ margin:'0 0 6px', fontSize:12, fontWeight:700, color:EXCEPCION_COLOR }}>
+              No cumplís las correlatividades para marcarla como {ESTADO_STYLES[estado].label.toLowerCase()}
+            </p>
+            <ul style={{ margin:'0 0 10px', paddingLeft:16, fontSize:11, lineHeight:1.6, color:'#cbd5e1' }}>
+              {faltantes.map(f => (
+                <li key={`${f.id}-${f.requiere}`}>
+                  {f.nombre}: necesitás tenerla {f.requiere}
+                  <span style={{ color:'#64748b' }}> (está {ESTADO_STYLES[f.actual].label.toLowerCase()})</span>
+                </li>
+              ))}
+            </ul>
+            <label style={{ display:'flex', gap:8, alignItems:'flex-start', cursor:'pointer',
+              fontSize:12, color:'#e2e8f0', lineHeight:1.45 }}>
+              <input type="checkbox" checked={excepcion} onChange={e => setExcepcion(e.target.checked)}
+                style={{ marginTop:2, accentColor:EXCEPCION_COLOR }} />
+              <span>
+                <strong>Registrar como excepción.</strong> La facultad me habilitó a cursarla o rendirla igual.
+              </span>
+            </label>
+          </div>
+        )}
+
         {/* Nota */}
         {hasNota && (
           <div style={{ marginBottom:18 }}>
@@ -142,14 +202,14 @@ export default function EditarEstadoModal({ materia: m, materias, onSave, onClos
             cursor:'pointer', fontSize:13, fontWeight:600 }}>
             Cancelar
           </button>
-          <button onClick={handleSave} disabled={saving} style={{
-            flex:2, padding:11, border:'none', borderRadius:9, cursor:'pointer',
+          <button onClick={handleSave} disabled={!puedeGuardar} style={{
+            flex:2, padding:11, border:'none', borderRadius:9, cursor: puedeGuardar ? 'pointer' : 'not-allowed',
             fontSize:13, fontWeight:700,
             background:'linear-gradient(135deg,#4f46e5,#7c3aed)', color:'#fff',
-            boxShadow:'0 4px 16px #4f46e544', opacity: saving ? 0.7 : 1,
+            boxShadow:'0 4px 16px #4f46e544', opacity: puedeGuardar ? 1 : 0.5,
             transition:'opacity 0.15s',
           }}>
-            {saving ? 'Guardando...' : 'Guardar cambios'}
+            {saving ? 'Guardando...' : requiereExcepcion && excepcion ? 'Guardar como excepción' : 'Guardar cambios'}
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Materia, EstadoVisual, ESTADO_STYLES } from '@/types';
+import { Materia, EstadoVisual, ESTADO_STYLES, EXCEPCION_COLOR } from '@/types';
 
 interface Props {
   materia: Materia;
@@ -38,6 +38,13 @@ export default function MateriaCard({ materia: m, estadoVisual, onClick }: Props
             <span style={{ fontSize:10, fontWeight:800, color:s.border,
               background:`${s.border}18`, borderRadius:4, padding:'1px 5px' }}>
               {m.nota}
+            </span>
+          )}
+          {m.excepcion && (
+            <span title="Registrada como excepción a las correlatividades"
+              style={{ fontSize:7.5, fontWeight:700, color:EXCEPCION_COLOR,
+              background:`${EXCEPCION_COLOR}20`, borderRadius:3, padding:'1px 4px', letterSpacing:0.3 }}>
+              EXCEPCIÓN
             </span>
           )}
           {m.esLibre && (
