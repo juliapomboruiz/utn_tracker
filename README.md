@@ -32,7 +32,7 @@ Para saber qué materias podés cursar hay que cruzar a mano la tabla de correla
 - **Excepciones a las correlatividades.** Si la facultad te habilitó a cursar o rendir una materia sin cumplir los requisitos, la app te muestra qué te falta y te deja registrarla igual, con la marca *Excepción*.
 - **Grafo interactivo de correlatividades:** al pasar el mouse por una materia se resaltan las que necesita y las que habilita.
 - **Panel de progreso:** porcentaje de avance, obligatorias aprobadas, créditos de electivas, materias en curso y regulares, y promedio.
-- **Cuentas de usuario** con registro e inicio de sesión. Al registrarte, el plan completo ya viene cargado.
+- **Cuentas de usuario** con registro e inicio de sesión con email y contraseña. Al registrarte, el plan completo ya viene cargado.
 
 <table>
   <tr>
@@ -108,22 +108,21 @@ Todos los endpoints, salvo los de `/api/auth`, requieren el encabezado `Authoriz
 
 ### 2. Backend
 
-Definí estas variables de entorno, que lee `application.properties`:
+```bash
+cd backend
+cp .env.example .env        # completá la conexión a la base y el JWT_SECRET
+mvn spring-boot:run
+```
 
 | Variable | Ejemplo |
 |---|---|
 | `DATABASE_URL` | `jdbc:postgresql://localhost:5432/utn_tracker` |
 | `DATABASE_USER` | `postgres` |
 | `DATABASE_PASSWORD` | `tu_contraseña` |
-| `JWT_SECRET` | una clave larga en Base64 |
-| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` |
+| `JWT_SECRET` | clave en Base64, por ejemplo la salida de `openssl rand -base64 32` |
+| `CORS_ALLOWED_ORIGINS` | opcional, por defecto `http://localhost:3000` |
 
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-El backend queda en `http://localhost:8080`. También se puede construir la imagen con el [`Dockerfile`](backend/Dockerfile).
+El backend queda en `http://localhost:8080`. En producción no hay `.env`: las mismas variables se definen en el entorno del servidor. También se puede construir la imagen con el [`Dockerfile`](backend/Dockerfile).
 
 ### 3. Frontend
 
@@ -166,7 +165,6 @@ utn_tracker/
 
 ## Próximos pasos
 
-- Inicio de sesión con Google, con verificación del token en el backend.
 - Tests de integración de la API.
 - Soporte para otras carreras y planes de estudio.
 
