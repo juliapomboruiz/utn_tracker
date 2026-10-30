@@ -7,7 +7,7 @@
 **Tu plan de estudios en un solo lugar.**
 Aplicación web para que estudiantes de Ingeniería en Sistemas de Información de la UTN Facultad Regional Santa Fe (Plan 2023) registren su avance en la carrera, materia por materia.
 
-[**Abrir la app →**](https://utntracker.vercel.app)
+[**Abrir la app →**](https://utntracker.vercel.app/login)
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3-6DB33F?logo=springboot&logoColor=white)
